@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://android.com">
+<manifest xmlns:android="http://android.com"
+    xmlns:tools="http://android.com"
+    package="com.nexus.sdk">
 
     <application
-        android:label="NexusSDK Launcher">
+        android:label="NexusSDK Launcher"
+        android:allowBackup="true"
+        tools:ignore="MissingApplicationIcon">
         
         <activity
             android:name="com.nexus.sdk.MainActivity"
