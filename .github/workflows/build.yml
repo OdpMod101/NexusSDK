@@ -13,25 +13,26 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    # Ustawienie Javy pod kompilację Androida
-    - name: Ustawienie Javy
+    # Java 17 jest wymagana do poprawnego działania Gradle 8+
+    - name: Ustawienie Javy 17
       uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
         java-version: '17'
 
-    # Wymuszenie stabilnej i sprawdzonej wersji Gradle 8.0
-    - name: Konfiguracja stabilnego Gradle
+    # Wymuszamy wersję 8.1.1, żeby była w 100% zgodna z naszym nowym build.gradle
+    - name: Konfiguracja Gradle 8.1.1
       uses: gradle/actions/setup-gradle@v3
       with:
-        gradle-version: '8.0'
+        gradle-version: '8.1.1'
 
-    # Budowanie aplikacji za pomocą wymuszonej wersji Gradle
+    # Budujemy czysty plik APK
     - name: Budowanie projektu przez Gradle
       run: |
         cd android
-        gradle assembleRelease
+        gradle :app:assembleRelease
 
+    # GitHub udostępni gotowy plik APK jako artefakt do pobrania
     - name: Udostępnij gotową aplikację APK
       uses: actions/upload-artifact@v4
       with:
