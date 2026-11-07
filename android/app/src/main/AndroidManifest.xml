@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://android.com"
-    xmlns:tools="http://android.com"
-    package="com.nexus.sdk">
+<manifest xmlns:android="http://android.com">
 
     <application
         android:label="NexusSDK Launcher"
-        android:allowBackup="true"
-        tools:ignore="MissingApplicationIcon">
+        android:allowBackup="true">
         
         <activity
-            android:name="com.nexus.sdk.MainActivity"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
