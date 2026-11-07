@@ -20,12 +20,11 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    # Budowanie aplikacji i silnika za pomocą Gradle
+    # Budowanie aplikacji za pomocą wbudowanego systemu Gradle
     - name: Budowanie projektu przez Gradle
       run: |
         cd android
-        chmod +x gradlew
-        ./gradlew assembleRelease
+        gradle assembleRelease
 
     - name: Udostępnij gotową aplikację APK
       uses: actions/upload-artifact@v4
