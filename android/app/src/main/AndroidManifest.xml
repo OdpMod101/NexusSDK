@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://android.com"
-    package="com.nexus.sdk">
+<manifest xmlns:android="http://android.com">
 
     <application
-        android:allowBackup="true"
-        android:label="NexusSDK Launcher"
-        android:supportsRtl="true">
+        android:label="NexusSDK Launcher">
         
         <activity
             android:name="com.nexus.sdk.MainActivity"
