@@ -13,13 +13,15 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    <p>Ustawienie Javy pod kompilację Androida
+    # Ustawienie Javy pod kompilację Androida
+    - name: Ustawienie Javy
       uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
         java-version: '17'
 
-    <p>Budowanie aplikacji i silnika za pomocą Gradle
+    # Budowanie aplikacji i silnika za pomocą Gradle
+    - name: Budowanie projektu przez Gradle
       run: |
         cd android
         chmod +x gradlew
