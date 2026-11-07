@@ -1,4 +1,4 @@
-name: Kompilacja NexusSDK
+name: Kompilacja NexusSDK APK
 
 on:
   push:
@@ -13,18 +13,21 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Budowanie projektu przez CMake
-      run: |
-        cmake -B build \
-          -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_LATEST_HOME/build/cmake/android.toolchain.cmake \
-          -DANDROID_ABI=arm64-v8a \
-          -DANDROID_PLATFORM=android-26 \
-          -DCMAKE_BUILD_TYPE=Release
-        cmake --build build
+    <p>Ustawienie Javy pod kompilację Androida
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
 
-    - name: Udostępnij gotowy plik NexusSDK
+    <p>Budowanie aplikacji i silnika za pomocą Gradle
+      run: |
+        cd android
+        chmod +x gradlew
+        ./gradlew assembleRelease
+
+    - name: Udostępnij gotową aplikację APK
       uses: actions/upload-artifact@v4
       with:
-        name: nexus_core_android
-        path: build/libnexus_core.so
+        name: nexus_sdk_launcher
+        path: android/app/build/outputs/apk/release/app-release-unsigned.apk
         
