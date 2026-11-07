@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://android.com">
-
+<manifest xmlns:android="http://android.com"
+    package="com.nexus.sdk">
     <application android:label="NexusSDK">
-        <activity 
-            android:name="com.nexus.sdk.MainActivity" 
-            android:exported="true">
+        <activity android:name="com.nexus.sdk.MainActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
-
 </manifest>
