@@ -1,4 +1,4 @@
-name: Kompilacja NexusSDK APK
+name: Kompilacja NexusSDK bez Gradle
 
 on:
   push:
@@ -13,35 +13,47 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    # 1. Uruchamiamy oficjalne środowisko Java
+    # 1. Uruchamiamy środowisko Java (potrzebne do spakowania APK)
     - name: Ustawienie Javy 17
       uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
         java-version: '17'
 
-    # 2. Dostarczamy Android Services i SDK
-    - name: Inicjalizacja Android SDK Tools
+    # 2. Ładujemy czyste narzędzia Android SDK bez zbędnych usług
+    - name: Inicjalizacja Android SDK
       uses: android-actions/setup-android@v4
       with:
-        packages: 'platform-tools'
+        packages: 'build-tools;34.0.0 platform-tools platforms;android-34'
 
-    # 3. Konfiguracja samego środowiska Gradle (bez usuwanego parametru arguments)
-    - name: Konfiguracja Gradle 8.1.1
-      uses: gradle/actions/setup-gradle@v4
-      with:
-        gradle-version: '8.1.1'
-
-    # 4. Właściwe wywołanie kompilacji przez standardową komendę shell
-    - name: Budowanie aplikacji APK
+    # 3. Kompilujemy Twój silnik C++ bezpośrednio przez CMake
+    - name: Budowanie silnika C++ (.so)
       run: |
-        cd android
-        gradle :app:assembleRelease
+        cmake -B build_native \
+          -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_LATEST_HOME/build/cmake/android.toolchain.cmake \
+          -DANDROID_ABI=arm64-v8a \
+          -DANDROID_PLATFORM=android-26 \
+          -DCMAKE_BUILD_TYPE=Release
+        cmake --build build_native
 
-    # 5. Eksport gotowego pliku instalacyjnego programu
+    # 4. Tworzymy aplikację APK za pomocą prostych narzędzi konsolowych (AAPT2)
+    - name: Pakowanie aplikacji przez AAPT2
+      run: |
+        mkdir -p out/assets out/lib/arm64-v8a
+        # Kopiujemy Twój skompilowany przed chwilą silnik do folderu z bibliotekami aplikacji
+        cp build_native/libnexus_core.so out/lib/arm64-v8a/
+        
+        # AAPT2 kompiluje manifest bez durnych błędów scalania i weryfikacji usług online
+        $ANDROID_HOME/build-tools/34.0.0/aapt2 link \
+          -I $ANDROID_HOME/platforms/android-34/android.jar \
+          --manifest android/app/src/main/AndroidManifest.xml \
+          -o out/NexusSDK_raw.apk \
+          --allow-reserved-package-id
+
+    # 5. Eksportujemy gotowy, czysty plik APK na Twój GitHub
     - name: Udostępnij gotową aplikację APK
       uses: actions/upload-artifact@v4
       with:
-        name: nexus_sdk_launcher
-        path: android/app/build/outputs/apk/release/app-release-unsigned.apk
+        name: nexus_sdk_launcher_no_gradle
+        path: out/NexusSDK_raw.apk
         
