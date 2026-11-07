@@ -13,26 +13,28 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    # Java 17 jest wymagana do poprawnego działania Gradle 8+
+    # 1. Uruchamiamy oficjalne środowisko Java
     - name: Ustawienie Javy 17
       uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
         java-version: '17'
 
-    # Wymuszamy wersję 8.1.1, żeby była w 100% zgodna z naszym nowym build.gradle
-    - name: Konfiguracja Gradle 8.1.1
-      uses: gradle/actions/setup-gradle@v3
+    # 2. Dostarczamy brakujące Android Services i SDK (To rozwiąże problem niedostępności usług!)
+    - name: Inicjalizacja Android SDK Tools
+      uses: android-actions/setup-android@v4
+      with:
+        packages: 'platform-tools'
+
+    # 3. Zamiast globalnego gradle, używamy automatycznego kreatora, który sam pobierze brakujące pliki budowania
+    - name: Budowanie aplikacji APK
+      uses: gradle/actions/setup-gradle@v4
       with:
         gradle-version: '8.1.1'
+        arguments: |
+          -p android :app:assembleRelease
 
-    # Budujemy czysty plik APK
-    - name: Budowanie projektu przez Gradle
-      run: |
-        cd android
-        gradle :app:assembleRelease
-
-    # GitHub udostępni gotowy plik APK jako artefakt do pobrania
+    # 4. Eksportujemy gotowy, działający plik instalacyjny programu
     - name: Udostępnij gotową aplikację APK
       uses: actions/upload-artifact@v4
       with:
