@@ -1,0 +1,35 @@
+name: Kompilacja NexusSDK
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Ustawienie Android NDK
+      uses: n0imal/setup-android-ndk@v1
+      with:
+        ndk-version: r25c
+
+    - name: Budowanie projektu przez CMake
+      run: |
+        cmake -B build \
+          -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake \
+          -DANDROID_ABI=arm64-v8a \
+          -DANDROID_PLATFORM=android-26 \
+          -DCMAKE_BUILD_TYPE=Release
+        cmake --build build
+
+    - name: Udostępnij gotowy plik NexusSDK
+      uses: actions/upload-artifact@v4
+      with:
+        name: nexus_core_android
+        path: build/libnexus_core.so
+        
