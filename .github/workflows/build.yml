@@ -20,21 +20,25 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    # 2. Dostarczamy brakujące Android Services i SDK (To rozwiąże problem niedostępności usług!)
+    # 2. Dostarczamy Android Services i SDK
     - name: Inicjalizacja Android SDK Tools
       uses: android-actions/setup-android@v4
       with:
         packages: 'platform-tools'
 
-    # 3. Zamiast globalnego gradle, używamy automatycznego kreatora, który sam pobierze brakujące pliki budowania
-    - name: Budowanie aplikacji APK
+    # 3. Konfiguracja samego środowiska Gradle (bez usuwanego parametru arguments)
+    - name: Konfiguracja Gradle 8.1.1
       uses: gradle/actions/setup-gradle@v4
       with:
         gradle-version: '8.1.1'
-        arguments: |
-          -p android :app:assembleRelease
 
-    # 4. Eksportujemy gotowy, działający plik instalacyjny programu
+    # 4. Właściwe wywołanie kompilacji przez standardową komendę shell
+    - name: Budowanie aplikacji APK
+      run: |
+        cd android
+        gradle :app:assembleRelease
+
+    # 5. Eksport gotowego pliku instalacyjnego programu
     - name: Udostępnij gotową aplikację APK
       uses: actions/upload-artifact@v4
       with:
