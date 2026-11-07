@@ -20,6 +20,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    // Łączymy z naszym plikiem CMakeLists.txt, aby automatycznie kompilować silnik .so
     externalNativeBuild {
         cmake {
             path file('../../CMakeLists.txt')
