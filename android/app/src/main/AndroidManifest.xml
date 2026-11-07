@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://android.com">
+<manifest xmlns:android="http://android.com"
+    package="com.nexus.sdk">
 
     <application
         android:allowBackup="true"
@@ -7,7 +8,7 @@
         android:supportsRtl="true">
         
         <activity
-            android:name=".MainActivity"
+            android:name="com.nexus.sdk.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
