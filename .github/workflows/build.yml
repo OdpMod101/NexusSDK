@@ -16,7 +16,7 @@ jobs:
     - name: Budowanie projektu przez CMake
       run: |
         cmake -B build \
-          -DCMAKE_TOOLCHAIN_FILE=$ANDROID_HOME/ndk/25.2.9519653/build/cmake/android.toolchain.cmake \
+          -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_LATEST_HOME/build/cmake/android.toolchain.cmake \
           -DANDROID_ABI=arm64-v8a \
           -DANDROID_PLATFORM=android-26 \
           -DCMAKE_BUILD_TYPE=Release
