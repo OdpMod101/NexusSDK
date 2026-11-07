@@ -6,7 +6,7 @@
         android:allowBackup="true">
         
         <activity
-            android:name=".MainActivity"
+            android:name="com.nexus.sdk.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
