@@ -1,23 +1,15 @@
 cmake_minimum_required(VERSION 3.22)
-project("NexusSDK_iOS_App")
+project("NexusSDK_iOS")
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Ustawienia architektury procesorów Apple
+# Wymuszamy kompilację wyłącznie pod procesory Apple iOS (64-bit)
 set(CMAKE_OSX_ARCHITECTURES "arm64")
 set(CMAKE_OSX_SYSROOT "iphoneos")
 
-# Tworzymy aplikację jako Bundle (osobny program na iOS)
-add_executable(NexusLauncher MACOSX_BUNDLE 
-    src/main_ios.mm
-    Info.plist
-)
+# Budujemy czysty plik silnika .dylib z naszego folderu src
+add_library(nexus_core_ios SHARED src/main_ios.cpp)
 
-# Podpinamy nasz plik Info.plist do aplikacji
-set_target_properties(NexusLauncher PROPERTIES
-    MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist
-)
-
-# Linkowanie podstawowych frameworków graficznych iOS (UIKit i Foundation)
-target_link_libraries(NexusLauncher "-framework Foundation" "-framework UIKit")
+# Podstawowe biblioteki systemowe Apple
+target_link_libraries(nexus_core_ios "-framework Foundation")
