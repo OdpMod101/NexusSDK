@@ -1,0 +1,44 @@
+name: Kompilacja NexusSDK iOS IPA
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build_ios:
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    # 1. Kompilacja całego projektu Xcode w chmurze
+    - name: Budowanie aplikacji przez CMake i Xcode
+      run: |
+        cd ios
+        cmake -B build \
+          -G Xcode \
+          -DCMAKE_SYSTEM_NAME=iOS \
+          -DCMAKE_OSX_ARCHITECTURES=arm64 \
+          -DCMAKE_BUILD_TYPE=Release
+          
+        # Wymuszamy budowanie bez certyfikatów Apple, aby przeszło za darmo
+        cmake --build build --config Release -- -allowProvisioningDeviceRegistration=NO CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO
+
+    # 2. Pakowanie folderu .app do oficjalnego pliku .ipa
+    - name: Tworzenie pliku .ipa
+      run: |
+        mkdir -p Payload
+        # Kopiujemy skompilowaną strukturę aplikacji do folderu Payload
+        cp -r ios/build/Release-iphoneos/NexusLauncher.app Payload/
+        # Pakujemy zipem i zmieniamy rozszerzenie na .ipa
+        zip -r NexusSDK_iOS.ipa Payload
+
+    # 3. Udostępnienie gotowego pliku .ipa na Twoim GitHubie
+    - name: Udostępnij gotowy plik IPA
+      uses: actions/upload-artifact@v4
+      with:
+        name: nexus_launcher_ios
+        path: NexusSDK_iOS.ipa
+        
